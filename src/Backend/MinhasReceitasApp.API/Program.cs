@@ -1,6 +1,8 @@
 using MinhasReceitasApp.API.Filters;
 using MinhasReceitasApp.Application;
-using MinhasReceitasApp.Infrastructure; 
+using MinhasReceitasApp.Infrastructure;
+using MinhasReceitasApp.Infrastructure.Extensions;
+using MinhasReceitasApp.Infrastructure.MIgrations;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,5 +34,15 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapControllers();
 
+MigrateDatabase();
+
 app.Run();
 
+void MigrateDatabase()
+{
+    var databaseType = builder.Configuration.DatabaseType();
+    var connectionString = builder.Configuration.ConnectionString();
+
+    var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();  
+    DatabaseMigration.Migrate(databaseType, connectionString, serviceScope.ServiceProvider);
+}
