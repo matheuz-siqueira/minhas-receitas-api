@@ -1,0 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using MinhasReceitasApp.Domain.Entities;
+using MinhasReceitasApp.Domain.Repositories.User;
+
+namespace MinhasReceitasApp.Infrastructure.DataAccess.Repositories;
+
+public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository 
+{
+    private readonly MinhasReceitasAppDbContext _dbContext; 
+
+    public UserRepository(MinhasReceitasAppDbContext dbContext) => _dbContext = dbContext; 
+
+    public async Task Add(User user) => await _dbContext.Users.AddAsync(user);
+
+    public async Task<bool> ExistActiveWithEmail(string email) => await _dbContext.Users.AnyAsync(user => user.Email.Equals(email) && user.Active);
+     
+    
+}
