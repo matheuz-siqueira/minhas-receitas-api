@@ -17,4 +17,9 @@ public static class ConfigurationExtension
 
         return (DatabaseType)Enum.Parse(typeof(DatabaseType), databaseType!); 
     }
+
+    public static bool IsUnitTestEnviroment(this IConfiguration configuration)
+    {
+        return configuration.GetValue<bool>("InMemoryTest"); 
+    }
 }
