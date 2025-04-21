@@ -16,13 +16,16 @@ public static class DependencyInjectionExtension
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-       var databaseType = configuration.DatabaseType(); 
+        AddRepositories(services); 
+        if(configuration.IsUnitTestEnviroment())
+            return; 
+
+        var databaseType = configuration.DatabaseType(); 
         if(databaseType == DatabaseType.MySql)
         {
             AddDbContext_MySql(services, configuration); 
             AddFluentMigrator_MySql(services, configuration);
         }
-        AddRepositories(services); 
     }   
 
     private static void AddDbContext_MySql(IServiceCollection services, IConfiguration configuration)
