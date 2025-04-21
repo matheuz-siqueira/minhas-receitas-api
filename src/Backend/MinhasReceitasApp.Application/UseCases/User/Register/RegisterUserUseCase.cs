@@ -43,7 +43,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase
         await _unityOfWork.Commit(); 
 
         return new ResponseRegisterUserJson{
-            Name = request.Name, 
+            Name = user.Name, 
         };
     }
 
@@ -54,7 +54,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase
 
        var emailExist = await _readOnlyRepository.ExistActiveWithEmail(request.Email); 
        if(emailExist)
-            result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "E-mail já registrado."));
+            result.Errors.Add(new ValidationFailure(string.Empty, "E-mail já registrado."));
        
 
        if(result.IsValid == false)
