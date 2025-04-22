@@ -57,7 +57,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase
             result.Errors.Add(new ValidationFailure(string.Empty, "E-mail já registrado."));
        
 
-       if(result.IsValid == false)
+       if(!result.IsValid)
        {
             var errorMessages = result.Errors.Select(e => e.ErrorMessage).ToList(); 
             throw new ErrorOnValidationException(errorMessages);

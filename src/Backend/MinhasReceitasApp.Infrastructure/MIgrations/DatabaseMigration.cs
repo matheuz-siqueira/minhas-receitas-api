@@ -28,7 +28,7 @@ public static class DatabaseMigration
         parameters.Add("name", databaseName);
         var records = dbConnection.Query("SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = @name", parameters); 
 
-        if(records.Any() == false)
+        if(!records.Any())
             dbConnection.Execute($"CREATE DATABASE {databaseName}");
     }
 

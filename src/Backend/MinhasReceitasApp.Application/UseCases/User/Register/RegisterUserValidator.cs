@@ -11,7 +11,7 @@ public class RegisterUserValidator : AbstractValidator<RequestRegisterUserJson>
         RuleFor(user => user.Name).NotEmpty().WithMessage("O nome não pode ser vazio.");
         RuleFor(user => user.Email).NotEmpty().WithMessage("O Email não pode ser vazio.");
         RuleFor(user => user.Password.Length).GreaterThanOrEqualTo(6).WithMessage("A senha deve ter pelo menos 6 caracteres.");
-        When(user => string.IsNullOrEmpty(user.Email) == false, () => {
+        When(user => !string.IsNullOrEmpty(user.Email), () => {
             RuleFor(user => user.Email).EmailAddress().WithMessage("O Email deve ser válido."); 
         }); 
     }
