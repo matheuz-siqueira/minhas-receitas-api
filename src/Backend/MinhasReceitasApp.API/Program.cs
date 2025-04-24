@@ -1,3 +1,4 @@
+using MinhasReceitasApp.API.Converters;
 using MinhasReceitasApp.API.Filters;
 using MinhasReceitasApp.Application;
 using MinhasReceitasApp.Infrastructure;
@@ -9,7 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(
+    options => options.JsonSerializerOptions.Converters.Add(new StringConverter()));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -18,6 +21,7 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 builder.Services.AddApplication(builder.Configuration); 
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true); 
 
 var app = builder.Build();
 
