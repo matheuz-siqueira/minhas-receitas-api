@@ -7,7 +7,7 @@ public static class ConfigurationExtension
 {  
     public static string ConnectionString(this IConfiguration configuration)
     {
-        var databaseType = configuration.DatabaseType();    
+        // var databaseType = configuration.DatabaseType(); 
         return configuration.GetConnectionString("connection")!; 
     }
 

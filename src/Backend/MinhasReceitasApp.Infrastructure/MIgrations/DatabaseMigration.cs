@@ -11,17 +11,17 @@ public static class DatabaseMigration
     public static void Migrate(DatabaseType databaseType, string connectionString, IServiceProvider serviceProvider)
     {
         if(databaseType == DatabaseType.MySql)
-            EnsureDatabaseCreated_Mysql(connectionString); 
+            EnsureDatabaseCreated_MySql(connectionString); 
 
         MigrationDataBase(serviceProvider); 
     }
 
-    private static void EnsureDatabaseCreated_Mysql(string connectionString)
+    private static void EnsureDatabaseCreated_MySql(string connectionString)
     {
         var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString); 
         var databaseName = connectionStringBuilder.Database; 
 
-        connectionStringBuilder.Remove("Database");
+        connectionStringBuilder.Remove("Database"); 
         using var dbConnection = new MySqlConnection(connectionStringBuilder.ConnectionString);
 
         var parameters = new DynamicParameters(); 
