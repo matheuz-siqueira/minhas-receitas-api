@@ -5,9 +5,7 @@ using MinhasReceitasApp.Communication.Responses;
 
 namespace MinhasReceitasApp.API.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class UserController : ControllerBase
+public class UserController : MInhasReceitasAppBaseController
 {
     [HttpPost]
     [ProducesResponseType(typeof(ResponseRegisterUserJson), StatusCodes.Status201Created)]
