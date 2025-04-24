@@ -1,3 +1,4 @@
+using MinhasReceitasApp.Domain.Entities;
 using MinhasReceitasApp.Domain.Repositories.User;
 using Moq;
 
@@ -10,6 +11,11 @@ public class UserReadOnlyRepositoryBuilder
     public void ExistActiveUserWithEmail(string email)
     {
         _repository.Setup(repository => repository.ExistActiveWithEmail(email)).ReturnsAsync(true);
+    }
+
+    public void GetByEmailAndPassword(User user)
+    {
+        _repository.Setup(repository => repository.GetByEmailAndPassword(user.Email, user.Password)).ReturnsAsync(user); 
     }
     public IUserReadOnlyRepository Build() => _repository.Object;
     
