@@ -7,6 +7,7 @@ using MinhasReceitasApp.Communication.Requests;
 using MinhasReceitasApp.Communication.Responses;
 using MinhasReceitasApp.Domain.Repositories;
 using MinhasReceitasApp.Domain.Repositories.User;
+using MinhasReceitasApp.Domain.Security.Tokens;
 using MinhasReceitasApp.Exceptions.ExceptionsBase;
 
 namespace MinhasReceitasApp.Application.UseCases.User.Register;
@@ -18,19 +19,22 @@ public class RegisterUserUseCase : IRegisterUserUseCase
     private readonly IMapper _mapper; 
     private readonly PasswordEncripter _passwordEncripter;
     private readonly IUnityOfWork _unityOfWork; 
+    private readonly IAccessTokenGenerator _accessTokenGenerator;
 
     public RegisterUserUseCase(
         IUserReadOnlyRepository readOnlyRepository, 
         IUserWriteOnlyRepository writeOnlyRepository,
         IMapper mapper, 
         PasswordEncripter passwordEncripter, 
-        IUnityOfWork unityOfWork)
+        IUnityOfWork unityOfWork, 
+        IAccessTokenGenerator accessTokenGenerator)
     {
         _readOnlyRepository = readOnlyRepository; 
         _writeOnlyRepository = writeOnlyRepository; 
         _mapper = mapper; 
         _passwordEncripter = passwordEncripter; 
-        _unityOfWork = unityOfWork;     
+        _unityOfWork = unityOfWork;
+        _accessTokenGenerator = accessTokenGenerator;     
     }
     public async Task<ResponseRegisterUserJson> Execute(RequestRegisterUserJson request) 
     {
@@ -38,12 +42,17 @@ public class RegisterUserUseCase : IRegisterUserUseCase
         var user = _mapper.Map<Domain.Entities.User>(request); 
 
         user.Password = _passwordEncripter.Encrypt(request.Password); 
+        user.UserIdentifier = Guid.NewGuid(); 
 
         await _writeOnlyRepository.Add(user); 
         await _unityOfWork.Commit(); 
 
         return new ResponseRegisterUserJson{
             Name = user.Name, 
+            Tokens = new ResponseTokenJson
+            {
+                AccessToken = _accessTokenGenerator.Generate(user.UserIdentifier)
+            }
         };
     }
 
