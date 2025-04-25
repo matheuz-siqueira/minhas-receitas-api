@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using MinhasReceitasApp.Domain.Enums;
 using MinhasReceitasApp.Domain.Repositories;
 using MinhasReceitasApp.Domain.Repositories.User;
+using MinhasReceitasApp.Domain.Security.Tokens;
 using MinhasReceitasApp.Infrastructure.DataAccess;
 using MinhasReceitasApp.Infrastructure.DataAccess.Repositories;
 using MinhasReceitasApp.Infrastructure.Extensions;
+using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Generator;
 
 namespace MinhasReceitasApp.Infrastructure;
 
@@ -17,6 +19,7 @@ public static class DependencyInjectionExtension
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         AddRepositories(services); 
+        AddTokens(services, configuration);
         if(configuration.IsUnitTestEnviroment())
             return; 
 
@@ -57,4 +60,11 @@ public static class DependencyInjectionExtension
         }); 
     }
     
+    private static void AddTokens(IServiceCollection services, IConfiguration configuration)
+    {
+        var expirationTimeMinutes = configuration.GetValue<uint>("Settings:Jwt:ExpirationTimeMinutes");
+        var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey"); 
+
+        services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
+    }
 }
