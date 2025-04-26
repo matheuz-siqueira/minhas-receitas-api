@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Backend\MinhasReceitasApp.Application\MinhasReceitasApp.Application.csproj" />
+    <ProjectReference Include="..\..\src\Backend\MinhasReceitasApp.Infrastructure\MinhasReceitasApp.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Shared\MinhasReceitasApp.Communication\MinhasReceitasApp.Communication.csproj" />
   </ItemGroup>
 
