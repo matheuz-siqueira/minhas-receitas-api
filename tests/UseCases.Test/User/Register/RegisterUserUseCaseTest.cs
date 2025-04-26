@@ -3,6 +3,7 @@ using CommonTestUtilities.Cryptography;
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
+using CommonTestUtilities.Tokens;
 using FluentAssertions;
 using MinhasReceitasApp.Application.UseCases.User.Register;
 using MinhasReceitasApp.Exceptions.ExceptionsBase;
@@ -18,8 +19,10 @@ public class RegisterUserUseCaseTest
         var useCase = CreateUseCase(); 
         var result = await useCase.Execute(request);
 
-        result.Should().NotBeNull(); 
-        result.Name.Should().Be(request.Name); 
+        result.Should().NotBeNull();
+        result.Tokens.Should().NotBeNull(); 
+        result.Name.Should().NotBeNullOrWhiteSpace().And.Be(request.Name);
+        result.Tokens.AccessToken.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact] 
@@ -57,11 +60,12 @@ public class RegisterUserUseCaseTest
         var writeRepository = UserWriteOnlyRepositoryBuilder.Build(); 
         var unityOfWork = UnityOfWorkBuilder.Build(); 
         var readRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
+        var accessTokenGenerator = JwtTokenGeneratorBuilder.Build();
 
         if(string.IsNullOrEmpty(email) == false) 
             readRepositoryBuilder.ExistActiveUserWithEmail(email);
 
 
-        return new RegisterUserUseCase(readRepositoryBuilder.Build(), writeRepository, mapper, passwordEncripter, unityOfWork); 
+        return new RegisterUserUseCase(readRepositoryBuilder.Build(), writeRepository, mapper, passwordEncripter, unityOfWork, accessTokenGenerator); 
     }
 }
