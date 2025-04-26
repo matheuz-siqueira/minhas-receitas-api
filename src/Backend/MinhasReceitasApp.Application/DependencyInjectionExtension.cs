@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MinhasReceitasApp.Application.Services.AutoMapper;
 using MinhasReceitasApp.Application.Services.Cryptography;
 using MinhasReceitasApp.Application.UseCases.Login.DoLogin;
+using MinhasReceitasApp.Application.UseCases.User.Profile;
 using MinhasReceitasApp.Application.UseCases.User.Register;
 
 namespace MinhasReceitasApp.Application;
@@ -20,6 +21,7 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
         services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
+        services.AddScoped<IGetUserProfileUseCase, GetUserProfileUseCase>();
     }
 
     private static void AddAutoMapper(IServiceCollection services)
