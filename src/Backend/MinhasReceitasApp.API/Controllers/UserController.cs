@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using MinhasReceitasApp.API.Attributes;
 using MinhasReceitasApp.Application.UseCases.User.Register;
 using MinhasReceitasApp.Communication.Requests;
 using MinhasReceitasApp.Communication.Responses;
 
 namespace MinhasReceitasApp.API.Controllers;
 
+[AuthenticatedUser]
 public class UserController : MInhasReceitasAppBaseController
 {
     [HttpPost]
