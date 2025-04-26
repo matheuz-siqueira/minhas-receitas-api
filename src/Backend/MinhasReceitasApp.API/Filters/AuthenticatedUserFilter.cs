@@ -54,7 +54,7 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
     {
         var authentication = context.HttpContext.Request.Headers.Authorization.ToString();
         if(string.IsNullOrWhiteSpace(authentication))
-            throw new MinhasReceitasAppException("No token"); 
+            throw new MinhasReceitasAppException("Request don't have token."); 
         
         return authentication["Bearer ".Length..].Trim();  
     }   
