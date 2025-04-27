@@ -8,7 +8,7 @@ public class AutoMapping : Profile
 {
     public AutoMapping()
     {
-        RequestToDomain(); 
+        RequestToDomain();
         DomainToResponse();
     }
 
@@ -20,7 +20,7 @@ public class AutoMapping : Profile
 
     private void DomainToResponse()
     {
-        CreateMap<Domain.Entities.User, ResponseUseProfileJson>(); 
+        CreateMap<Domain.Entities.User, ResponseUseProfileJson>();
     }
 
 }

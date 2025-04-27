@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MinhasReceitasApp.API.Attributes;
 using MinhasReceitasApp.Application.UseCases.User.Profile;
 using MinhasReceitasApp.Application.UseCases.User.Register;
+using MinhasReceitasApp.Application.UseCases.User.Update;
 using MinhasReceitasApp.Communication.Requests;
 using MinhasReceitasApp.Communication.Responses;
 
@@ -15,9 +16,9 @@ public class UserController : MInhasReceitasAppBaseController
         [FromServices] IRegisterUserUseCase useCase,
         [FromBody] RequestRegisterUserJson request)
     {
-        var result = await useCase.Execute(request); 
+        var result = await useCase.Execute(request);
 
-        return Created(string.Empty, result);  
+        return Created(string.Empty, result);
     }
 
     [HttpGet]
@@ -25,7 +26,20 @@ public class UserController : MInhasReceitasAppBaseController
     [AuthenticatedUser]
     public async Task<IActionResult> GetUserProfile([FromServices] IGetUserProfileUseCase useCase)
     {
-        var result = await useCase.Execute(); 
-        return Ok(result); 
+        var result = await useCase.Execute();
+        return Ok(result);
     }
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [AuthenticatedUser]
+    public async Task<IActionResult> Update(
+        [FromServices] IUpdateUserUseCase useCase,
+        [FromBody] RequestUpdateUserJson request)
+    {
+        await useCase.Execute(request);
+        return NoContent();
+    }
+
 }

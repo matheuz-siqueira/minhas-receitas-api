@@ -21,58 +21,59 @@ public static class DependencyInjectionExtension
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        AddRepositories(services); 
+        AddRepositories(services);
         AddTokens(services, configuration);
-        AddLoggedUser(services); 
-        if(configuration.IsUnitTestEnviroment())
-            return; 
+        AddLoggedUser(services);
+        if (configuration.IsUnitTestEnviroment())
+            return;
 
-        var databaseType = configuration.DatabaseType(); 
-        if(databaseType == DatabaseType.MySql)
+        var databaseType = configuration.DatabaseType();
+        if (databaseType == DatabaseType.MySql)
         {
-            AddDbContext_MySql(services, configuration); 
+            AddDbContext_MySql(services, configuration);
             AddFluentMigrator_MySql(services, configuration);
         }
-    }   
+    }
 
     private static void AddDbContext_MySql(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
-        var serverVersion = new MySqlServerVersion(new Version(8,0,41)); 
-        services.AddDbContext<MinhasReceitasAppDbContext>(dbContextOptions => 
+        var serverVersion = new MySqlServerVersion(new Version(8, 0, 41));
+        services.AddDbContext<MinhasReceitasAppDbContext>(dbContextOptions =>
         {
-            dbContextOptions.UseMySql(connectionString, serverVersion); 
-        }); 
+            dbContextOptions.UseMySql(connectionString, serverVersion);
+        });
     }
 
     private static void AddRepositories(IServiceCollection services)
     {
         services.AddScoped<IUserReadOnlyRepository, UserRepository>();
-        services.AddScoped<IUserWriteOnlyRepository, UserRepository>();  
+        services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
+        services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
         services.AddScoped<IUnityOfWork, UnityOfWork>();
     }
 
     private static void AddFluentMigrator_MySql(IServiceCollection services, IConfiguration configuration)
-    { 
+    {
         var connectionString = configuration.ConnectionString();
-        services.AddFluentMigratorCore().ConfigureRunner(options => 
+        services.AddFluentMigratorCore().ConfigureRunner(options =>
         {
             options
                 .AddMySql5()
                 .WithGlobalConnectionString(connectionString)
-                .ScanIn(Assembly.Load("MinhasReceitasApp.Infrastructure")).For.All(); 
-        }); 
+                .ScanIn(Assembly.Load("MinhasReceitasApp.Infrastructure")).For.All();
+        });
     }
-    
+
     private static void AddTokens(IServiceCollection services, IConfiguration configuration)
     {
         var expirationTimeMinutes = configuration.GetValue<uint>("Settings:Jwt:ExpirationTimeMinutes");
-        var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey"); 
+        var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey");
 
         services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
-        services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!)); 
+        services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!));
     }
 
     private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
-    
+
 }
