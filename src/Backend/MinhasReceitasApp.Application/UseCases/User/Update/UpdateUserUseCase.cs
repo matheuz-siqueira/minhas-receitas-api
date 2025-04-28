@@ -14,19 +14,16 @@ public class UpdateUserUseCase : IUpdateUserUseCase
     private readonly IUserUpdateOnlyRepository _userUpdateOnlyRepository;
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
     private readonly IUnityOfWork _unityOfWork;
-    private readonly IMapper _mapper;
     public UpdateUserUseCase(
         ILoggedUser loggedUser,
         IUserUpdateOnlyRepository userUpdateOnlyRepository,
         IUserReadOnlyRepository userReadOnlyRepository,
-        IUnityOfWork unityOfWork,
-        IMapper mapper)
+        IUnityOfWork unityOfWork)
     {
         _loggedUser = loggedUser;
         _userUpdateOnlyRepository = userUpdateOnlyRepository;
         _userReadOnlyRepository = userReadOnlyRepository;
         _unityOfWork = unityOfWork;
-        _mapper = mapper;
     }
 
     public async Task Execute(RequestUpdateUserJson request)
