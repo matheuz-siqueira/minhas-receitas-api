@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MinhasReceitasApp.Application.Services.AutoMapper;
-using MinhasReceitasApp.Application.Services.Cryptography;
 using MinhasReceitasApp.Application.UseCases.Login.DoLogin;
 using MinhasReceitasApp.Application.UseCases.User.Profile;
 using MinhasReceitasApp.Application.UseCases.User.Register;
@@ -15,7 +14,6 @@ public static class DependencyInjectionExtension
     {
         AddUseCase(services);
         AddAutoMapper(services);
-        AddPasswordEncripter(services, configuration);
     }
 
     private static void AddUseCase(IServiceCollection services)
@@ -34,9 +32,5 @@ public static class DependencyInjectionExtension
             options.AddProfile(new AutoMapping());
         }).CreateMapper());
     }
-    private static void AddPasswordEncripter(IServiceCollection services, IConfiguration configuration)
-    {
-        var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
-        services.AddScoped(option => new PasswordEncripter(additionalKey!));
-    }
+
 }

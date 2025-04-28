@@ -1,8 +1,9 @@
-using MinhasReceitasApp.Application.Services.Cryptography;
+using MinhasReceitasApp.Domain.Security.Cryptography;
+using MinhasReceitasApp.Infrastructure.Security.Cryptography;
 
 namespace CommonTestUtilities.Cryptography;
 
 public static class PasswordEncripterBuilder
 {
-    public static PasswordEncripter Build() => new PasswordEncripter("abc1234");
+    public static IPasswordEncripter Build() => new SHA512Encripter("abc1234");
 }

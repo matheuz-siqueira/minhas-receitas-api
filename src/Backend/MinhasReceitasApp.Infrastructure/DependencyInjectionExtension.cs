@@ -6,11 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 using MinhasReceitasApp.Domain.Enums;
 using MinhasReceitasApp.Domain.Repositories;
 using MinhasReceitasApp.Domain.Repositories.User;
+using MinhasReceitasApp.Domain.Security.Cryptography;
 using MinhasReceitasApp.Domain.Security.Tokens;
 using MinhasReceitasApp.Domain.Services.LoggedUser;
 using MinhasReceitasApp.Infrastructure.DataAccess;
 using MinhasReceitasApp.Infrastructure.DataAccess.Repositories;
 using MinhasReceitasApp.Infrastructure.Extensions;
+using MinhasReceitasApp.Infrastructure.Security.Cryptography;
 using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Generator;
 using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Validator;
 using MinhasReceitasApp.Infrastructure.Services.LoggedUser;
@@ -24,6 +26,7 @@ public static class DependencyInjectionExtension
         AddRepositories(services);
         AddTokens(services, configuration);
         AddLoggedUser(services);
+        AddPasswordEncripter(services, configuration);
         if (configuration.IsUnitTestEnviroment())
             return;
 
@@ -75,5 +78,9 @@ public static class DependencyInjectionExtension
     }
 
     private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
-
+    private static void AddPasswordEncripter(IServiceCollection services, IConfiguration configuration)
+    {
+        var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
+        services.AddScoped<IPasswordEncripter>(option => new SHA512Encripter(additionalKey!));
+    }
 }
