@@ -10,33 +10,31 @@ public class ExceptionFilter : IExceptionFilter
 {
     public void OnException(ExceptionContext context)
     {
-        if(context.Exception is MinhasReceitasAppException)
+        if (context.Exception is MinhasReceitasAppException)
             HandleProjectException(context);
-        else 
+        else
         {
-            ThrowUnknowException(context); 
+            ThrowUnknowException(context);
         }
     }
 
     private static void HandleProjectException(ExceptionContext context)
     {
-        if(context.Exception is InvalidLoginException)
+        if (context.Exception is InvalidLoginException)
         {
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized; 
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(context.Exception.Message));
         }
-        else if(context.Exception is ErrorOnValidationException)
+        else if (context.Exception is ErrorOnValidationException exception)
         {
-            var exception = context.Exception as ErrorOnValidationException;
-
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; 
-            context.Result = new BadRequestObjectResult(new ResponseErrorJson(exception!.ErrorMessages));
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            context.Result = new BadRequestObjectResult(new ResponseErrorJson(exception.ErrorMessages));
         }
-    } 
+    }
 
     private static void ThrowUnknowException(ExceptionContext context)
     {
         context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Result = new ObjectResult(new ResponseErrorJson("Erro desconhecido."));
-    }  
+    }
 }

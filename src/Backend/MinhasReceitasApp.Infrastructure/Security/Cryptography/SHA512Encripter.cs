@@ -4,10 +4,10 @@ using MinhasReceitasApp.Domain.Security.Cryptography;
 
 namespace MinhasReceitasApp.Infrastructure.Security.Cryptography;
 
-public class SHA512Encripter : IPasswordEncripter
+public class Sha512Encripter : IPasswordEncripter
 {
     private readonly string _additionalKey;
-    public SHA512Encripter(string additionalKey) => _additionalKey = additionalKey;
+    public Sha512Encripter(string additionalKey) => _additionalKey = additionalKey;
     public string Encrypt(string password)
     {
         var newPassword = $"{password}{_additionalKey}";
