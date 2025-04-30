@@ -81,6 +81,6 @@ public static class DependencyInjectionExtension
     private static void AddPasswordEncripter(IServiceCollection services, IConfiguration configuration)
     {
         var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
-        services.AddScoped<IPasswordEncripter>(option => new SHA512Encripter(additionalKey!));
+        services.AddScoped<IPasswordEncripter>(option => new Sha512Encripter(additionalKey!));
     }
 }
