@@ -23,7 +23,7 @@ public class RecipeValidatorTest
 
         var request = RequestRecipeJsonBuilder.Build();
 
-        request.CookingTime = (MinhasReceitasApp.Communication.Enums.CookingTime?)1000;
+        request.CookingTime = (CookingTime?)1000;
 
         var result = validator.Validate(request);
         result.IsValid.Should().BeFalse();
@@ -37,18 +37,18 @@ public class RecipeValidatorTest
 
         var request = RequestRecipeJsonBuilder.Build();
 
-        request.Difficulity = (MinhasReceitasApp.Communication.Enums.Difficulity?)1000;
+        request.Difficulty = (Difficulty?)1000;
 
         var result = validator.Validate(request);
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("Unsupported difficulity."));
+        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("Unsupported difficulty."));
     }
 
     [Theory]
     [InlineData(null)]
-    [InlineData("      ")]
+    [InlineData("          ")]
     [InlineData("")]
-    public void Error_Title_Empty(string title)
+    public void Error_Empty_Title(string title)
     {
         var validator = new RecipeValidator();
         var request = RequestRecipeJsonBuilder.Build();
@@ -69,11 +69,11 @@ public class RecipeValidatorTest
     }
 
     [Fact]
-    public void Success_Difficulity_Null()
+    public void Success_Difficulty_Null()
     {
         var validator = new RecipeValidator();
         var request = RequestRecipeJsonBuilder.Build();
-        request.Difficulity = null;
+        request.Difficulty = null;
         var result = validator.Validate(request);
         result.IsValid.Should().BeTrue();
     }
@@ -147,15 +147,17 @@ public class RecipeValidatorTest
         result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("two or more instructions have the same order."));
     }
 
-    [Fact]
-    public void Error_Negative_Step_Instructions()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void Error_Negative_Step_Instructions(int step)
     {
         var request = RequestRecipeJsonBuilder.Build();
-        request.Instructions.First().Step = -1;
+        request.Instructions.First().Step = step;
         var validator = new RecipeValidator();
         var result = validator.Validate(request);
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("step cannot be negative."));
+        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("step cannot be negative or zero."));
     }
 
     [Theory]
@@ -170,5 +172,19 @@ public class RecipeValidatorTest
         var result = validator.Validate(request);
         result.IsValid.Should().BeFalse();
         result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("instruction text cannot be empty."));
+    }
+
+    [Fact]
+    public void Error_Instructions_Too_Long()
+    {
+        var request = RequestRecipeJsonBuilder.Build();
+        request.Instructions.First().Text = RequestStringGenerator.Paragraphs(minCharacters: 2001);
+
+        var validator = new RecipeValidator();
+
+        var result = validator.Validate(request);
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("instruction text must have a maximum of 2000 characters."));
     }
 }

@@ -17,7 +17,7 @@ public class UpdateUserInvalidTokenTest : MinhasReceitasAppClassFixture
     {
         var request = RequestUpdateUserJsonBuilder.Build();
 
-        var response = await DoPut(_method, request, token: "INvalidToKen");
+        var response = await DoPut(method: _method, request: request, token: "INvalidToKen");
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -27,7 +27,7 @@ public class UpdateUserInvalidTokenTest : MinhasReceitasAppClassFixture
     {
         var request = RequestUpdateUserJsonBuilder.Build();
 
-        var response = await DoPut(_method, request, token: string.Empty);
+        var response = await DoPut(method: _method, request: request, token: string.Empty);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -39,7 +39,7 @@ public class UpdateUserInvalidTokenTest : MinhasReceitasAppClassFixture
 
         var token = JwtTokenGeneratorBuilder.Build().Generate(Guid.NewGuid());
 
-        var response = await DoPut(_method, request, token: token);
+        var response = await DoPut(method: _method, request: request, token: token);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }

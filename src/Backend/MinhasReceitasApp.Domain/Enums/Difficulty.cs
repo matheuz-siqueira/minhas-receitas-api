@@ -1,6 +1,6 @@
 namespace MinhasReceitasApp.Domain.Enums;
 
-public enum Difficulity
+public enum Difficulty
 {
     Low = 0,
     Medium = 1,

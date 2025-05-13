@@ -1,6 +1,9 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MinhasReceitasApp.Domain.Entities;
 
-public class Instruction
+[Table("Instructions")]
+public class Instruction : EntityBase
 {
     public int Step { get; set; }
     public string Text { get; set; } = string.Empty;

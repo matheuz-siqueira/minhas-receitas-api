@@ -11,10 +11,10 @@ namespace WebApi.Test.User.Profile;
 
 public class GetUserProfileTest : MinhasReceitasAppClassFixture
 {
-    private readonly string _method = "user"; 
-    private readonly string _name; 
-    private readonly string _email; 
-    private readonly Guid _userIdentifier; 
+    private readonly string _method = "user";
+    private readonly string _name;
+    private readonly string _email;
+    private readonly Guid _userIdentifier;
     public GetUserProfileTest(CustomWebApplicationFactory factory) : base(factory)
     {
         _name = factory.GetName();
@@ -24,19 +24,19 @@ public class GetUserProfileTest : MinhasReceitasAppClassFixture
     [Fact]
     public async Task Success()
     {
-        var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier); 
-        var response = await DoGet(_method, token: token); 
+        var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
+        var response = await DoGet(method: _method, token: token);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK); 
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        await using var responseBody = await response.Content.ReadAsStreamAsync(); 
+        await using var responseBody = await response.Content.ReadAsStreamAsync();
 
-        var responseData = await JsonDocument.ParseAsync(responseBody); 
+        var responseData = await JsonDocument.ParseAsync(responseBody);
 
         responseData.RootElement.GetProperty("name")
-            .GetString().Should().NotBeNullOrWhiteSpace().And.Be(_name); 
-        
+            .GetString().Should().NotBeNullOrWhiteSpace().And.Be(_name);
+
         responseData.RootElement.GetProperty("email")
-            .GetString().Should().NotBeNullOrWhiteSpace().And.Be(_email); 
+            .GetString().Should().NotBeNullOrWhiteSpace().And.Be(_email);
     }
 }
