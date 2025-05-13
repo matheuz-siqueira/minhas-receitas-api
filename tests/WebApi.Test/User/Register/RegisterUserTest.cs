@@ -8,26 +8,26 @@ namespace WebApi.Test.User.Register;
 
 public class RegisterUserTest : MinhasReceitasAppClassFixture
 {
-    private readonly string method = "user"; 
-    
-    public RegisterUserTest(CustomWebApplicationFactory factory) : base(factory) {}
+    private readonly string method = "user";
+
+    public RegisterUserTest(CustomWebApplicationFactory factory) : base(factory) { }
 
     [Fact]
     public async Task Success()
     {
         var request = RequestRegisterUserJsonBuilder.Build();
-        var response = await DoPost(method, request); 
+        var response = await DoPost(method: method, request: request);
 
-        response.StatusCode.Should().Be(HttpStatusCode.Created); 
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
 
         await using var responseBody = await response.Content.ReadAsStreamAsync();
-        var responseData = await JsonDocument.ParseAsync(responseBody); 
+        var responseData = await JsonDocument.ParseAsync(responseBody);
 
         responseData.RootElement.GetProperty("name")
-            .GetString().Should().NotBeNullOrWhiteSpace().And.Be(request.Name); 
+            .GetString().Should().NotBeNullOrWhiteSpace().And.Be(request.Name);
         responseData.RootElement
             .GetProperty("tokens").GetProperty("accessToken").GetString()
-                .Should().NotBeNullOrEmpty(); 
+                .Should().NotBeNullOrEmpty();
 
     }
 
@@ -35,17 +35,17 @@ public class RegisterUserTest : MinhasReceitasAppClassFixture
     public async Task Error_Empty_Name()
     {
         var request = RequestRegisterUserJsonBuilder.Build();
-        request.Name = string.Empty; 
+        request.Name = string.Empty;
 
-        var response = await DoPost(method, request); 
+        var response = await DoPost(method: method, request: request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         await using var responseBody = await response.Content.ReadAsStreamAsync();
 
-        var responseData = await JsonDocument.ParseAsync(responseBody); 
+        var responseData = await JsonDocument.ParseAsync(responseBody);
 
-        var errors = responseData.RootElement.GetProperty("errors").EnumerateArray(); 
+        var errors = responseData.RootElement.GetProperty("errors").EnumerateArray();
 
-        errors.Should().ContainSingle().And.Contain(error => error.GetString()!.Equals("O nome não pode ser vazio.")); 
+        errors.Should().ContainSingle().And.Contain(error => error.GetString()!.Equals("O nome não pode ser vazio."));
     }
 }

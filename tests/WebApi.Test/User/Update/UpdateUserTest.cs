@@ -21,7 +21,7 @@ public class UpdateUserTest : MinhasReceitasAppClassFixture
     {
         var request = RequestUpdateUserJsonBuilder.Build();
         var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
-        var response = await DoPut(_method, request, token);
+        var response = await DoPut(method: _method, request: request, token: token);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
@@ -31,7 +31,7 @@ public class UpdateUserTest : MinhasReceitasAppClassFixture
         var request = RequestUpdateUserJsonBuilder.Build();
         request.Name = string.Empty;
         var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
-        var response = await DoPut(_method, request, token);
+        var response = await DoPut(method: _method, request: request, token: token);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         await using var responseBody = await response.Content.ReadAsStreamAsync();

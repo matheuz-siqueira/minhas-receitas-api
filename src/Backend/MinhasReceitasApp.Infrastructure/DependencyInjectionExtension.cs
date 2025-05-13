@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MinhasReceitasApp.Domain.Enums;
 using MinhasReceitasApp.Domain.Repositories;
+using MinhasReceitasApp.Domain.Repositories.Recipe;
 using MinhasReceitasApp.Domain.Repositories.User;
 using MinhasReceitasApp.Domain.Security.Cryptography;
 using MinhasReceitasApp.Domain.Security.Tokens;
@@ -54,6 +55,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
         services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
         services.AddScoped<IUnityOfWork, UnityOfWork>();
+        services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
     }
 
     private static void AddFluentMigrator_MySql(IServiceCollection services, IConfiguration configuration)
