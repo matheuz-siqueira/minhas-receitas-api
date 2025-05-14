@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MinhasReceitasApp.Application.Services.AutoMapper;
 using MinhasReceitasApp.Application.UseCases.Login.DoLogin;
+using MinhasReceitasApp.Application.UseCases.Recipe.Filter;
 using MinhasReceitasApp.Application.UseCases.Recipe.Register;
 using MinhasReceitasApp.Application.UseCases.User.ChangePassword;
 using MinhasReceitasApp.Application.UseCases.User.Profile;
@@ -27,6 +28,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUpdateUserUseCase, UpdateUserUseCase>();
         services.AddScoped<IChangePasswordUseCase, ChangePasswordUseCase>();
         services.AddScoped<IRegisterRecipeUseCase, RegisterRecipeUseCase>();
+        services.AddScoped<IFilterRecipeUseCase, FilterRecipeUseCase>();
     }
 
     private static void AddAutoMapper(IServiceCollection services, IConfiguration configuration)
