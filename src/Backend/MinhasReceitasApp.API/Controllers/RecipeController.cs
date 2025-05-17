@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinhasReceitasApp.API.Attributes;
 using MinhasReceitasApp.API.Binders;
+using MinhasReceitasApp.Application.UseCases.Recipe.Delete;
 using MinhasReceitasApp.Application.UseCases.Recipe.Filter;
 using MinhasReceitasApp.Application.UseCases.Recipe.GetById;
 using MinhasReceitasApp.Application.UseCases.Recipe.Register;
@@ -47,5 +48,18 @@ public class RecipeController : MInhasReceitasAppBaseController
     {
         var response = await useCase.Execute(id);
         return Ok(response);
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        [FromServices] IDeleteRecipeUseCase useCase,
+        [FromRoute][ModelBinder(typeof(MinhasReceitasAppIdBinder))] long id)
+    {
+        await useCase.Execute(id);
+
+        return NoContent();
     }
 }
