@@ -6,6 +6,7 @@ using MinhasReceitasApp.Application.UseCases.Recipe.Delete;
 using MinhasReceitasApp.Application.UseCases.Recipe.Filter;
 using MinhasReceitasApp.Application.UseCases.Recipe.GetById;
 using MinhasReceitasApp.Application.UseCases.Recipe.Register;
+using MinhasReceitasApp.Application.UseCases.Recipe.Update;
 using MinhasReceitasApp.Communication.Requests;
 using MinhasReceitasApp.Communication.Responses;
 
@@ -59,6 +60,21 @@ public class RecipeController : MInhasReceitasAppBaseController
         [FromRoute][ModelBinder(typeof(MinhasReceitasAppIdBinder))] long id)
     {
         await useCase.Execute(id);
+
+        return NoContent();
+    }
+
+    [HttpPut]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+        [FromServices] IUpdateRecipeUseCase useCase,
+        [FromRoute][ModelBinder(typeof(MinhasReceitasAppIdBinder))] long id,
+        [FromBody] RequestRecipeJson request
+    )
+    {
+        await useCase.Execute(id, request);
 
         return NoContent();
     }
