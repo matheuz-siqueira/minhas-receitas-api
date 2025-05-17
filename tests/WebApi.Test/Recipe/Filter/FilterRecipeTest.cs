@@ -4,7 +4,6 @@ using CommonTestUtilities.Requests;
 using CommonTestUtilities.Tokens;
 using FluentAssertions;
 using MinhasReceitasApp.Communication.Requests;
-using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Generator;
 
 namespace WebApi.Test.Recipe.Filter;
 
