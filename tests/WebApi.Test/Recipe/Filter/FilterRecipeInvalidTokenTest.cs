@@ -2,7 +2,6 @@ using System.Net;
 using CommonTestUtilities.Requests;
 using CommonTestUtilities.Tokens;
 using FluentAssertions;
-using MinhasReceitasApp.Communication.Responses;
 
 namespace WebApi.Test.Recipe.Filter;
 

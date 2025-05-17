@@ -1,4 +1,5 @@
 using CommonTestUtilities.Entities;
+using CommonTestUtilities.IdEncryption;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     public Guid GetUserIdentifier() => _user.UserIdentifier;
 
     public string GetRecipeTitle() => _recipe.Title;
+    public string GetRecipeId() => IdEncripterBuilder.Build().Encode(_recipe.Id);
     public Difficulty GetRecipeDifficulty() => _recipe.Difficulty!.Value;
     public CookingTime GetRecipeCookingTime() => _recipe.CookingTime!.Value;
     public IList<DishType> GetRecipeDishTypes() => _recipe.DishTypes.Select(c => c.Type).ToList();
