@@ -1,7 +1,9 @@
 
 using Microsoft.AspNetCore.Mvc;
 using MinhasReceitasApp.API.Attributes;
+using MinhasReceitasApp.API.Binders;
 using MinhasReceitasApp.Application.UseCases.Recipe.Filter;
+using MinhasReceitasApp.Application.UseCases.Recipe.GetById;
 using MinhasReceitasApp.Application.UseCases.Recipe.Register;
 using MinhasReceitasApp.Communication.Requests;
 using MinhasReceitasApp.Communication.Responses;
@@ -33,5 +35,17 @@ public class RecipeController : MInhasReceitasAppBaseController
         if (response.Recipes.Any())
             return Ok(response);
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType(typeof(ResponseRecipeJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(
+        [FromServices] IGetRecipeByIdUseCase useCase,
+        [FromRoute][ModelBinder(typeof(MinhasReceitasAppIdBinder))] long id)
+    {
+        var response = await useCase.Execute(id);
+        return Ok(response);
     }
 }

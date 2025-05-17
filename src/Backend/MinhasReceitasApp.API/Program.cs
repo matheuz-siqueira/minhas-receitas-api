@@ -1,3 +1,4 @@
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.OpenApi.Models;
 using MinhasReceitasApp.API.Converters;
 using MinhasReceitasApp.API.Filters;
@@ -20,6 +21,8 @@ builder.Services.AddControllers().AddJsonOptions(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.OperationFilter<IdsFilter>();
+
     options.AddSecurityDefinition(TYPE_TOKEN, new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme.",
