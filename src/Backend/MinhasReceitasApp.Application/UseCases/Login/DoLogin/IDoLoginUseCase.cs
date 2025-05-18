@@ -5,5 +5,5 @@ namespace MinhasReceitasApp.Application.UseCases.Login.DoLogin;
 
 public interface IDoLoginUseCase
 {
-    public Task<ResponseRegisterUserJson> Execute(RequestLoginJson request);
+    Task<ResponseRegisterUserJson> Execute(RequestLoginJson request);
 }
