@@ -11,8 +11,8 @@ public class MinhasReceitasAppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Recipe> Recipes { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder mb)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        mb.ApplyConfigurationsFromAssembly(typeof(MinhasReceitasAppDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(MinhasReceitasAppDbContext).Assembly);
     }
 }

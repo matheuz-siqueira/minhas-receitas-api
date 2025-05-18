@@ -40,7 +40,7 @@ public class FilterRecipeValidatorTest
 
 
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("Unsupported difficulty"));
+        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("Unsupported difficulty."));
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class FilterRecipeValidatorTest
 
 
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("Unsupported dish type."));
+        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals("unsupported dish type."));
     }
 
 }
