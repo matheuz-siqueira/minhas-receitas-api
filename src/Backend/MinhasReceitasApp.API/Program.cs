@@ -70,15 +70,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Suporte a Locale
-// app.UseMiddleware<CultureMiddleware>(); 
-
 app.UseHttpsRedirection();
 app.MapControllers();
 
 MigrateDatabase();
 
-app.Run();
+await app.RunAsync();
 
 void MigrateDatabase()
 {
