@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinhasReceitasApp.API.Attributes;
 using MinhasReceitasApp.API.Binders;
+using MinhasReceitasApp.Application.UseCases.Image;
 using MinhasReceitasApp.Application.UseCases.Recipe.Delete;
 using MinhasReceitasApp.Application.UseCases.Recipe.Filter;
 using MinhasReceitasApp.Application.UseCases.Recipe.GetById;
@@ -78,4 +79,20 @@ public class RecipeController : MInhasReceitasAppBaseController
 
         return NoContent();
     }
+
+    [HttpPut]
+    [Route("image/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateImage(
+        [FromServices] IAddUpdateImageCoverUseCase useCase,
+        [FromRoute][ModelBinder(typeof(MinhasReceitasAppIdBinder))] long id,
+        IFormFile file)
+    {
+        await useCase.Execute(id, file);
+
+        return NoContent();
+    }
+
 }
