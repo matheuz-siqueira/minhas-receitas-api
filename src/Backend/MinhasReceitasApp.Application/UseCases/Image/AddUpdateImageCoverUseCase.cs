@@ -1,13 +1,12 @@
 
-using FileTypeChecker.Extensions;
-using FileTypeChecker.Types;
 using Microsoft.AspNetCore.Http;
-using MinhasReceitasApp.Domain.Extensions;
 using MinhasReceitasApp.Domain.Repositories;
 using MinhasReceitasApp.Domain.Repositories.Recipe;
 using MinhasReceitasApp.Domain.Services.LoggedUser;
 using MinhasReceitasApp.Domain.Services.Storage;
 using MinhasReceitasApp.Exceptions.ExceptionsBase;
+using MinhasReceitasApp.Application.Extensions;
+using MinhasReceitasApp.Domain.Extensions;
 
 namespace MinhasReceitasApp.Application.UseCases.Image;
 
@@ -39,23 +38,19 @@ public class AddUpdateImageCoverUseCase : IAddUpdateImageCoverUseCase
             throw new NotFoundException("Recipe not found.");
 
         var fileStream = file.OpenReadStream();
-        if (fileStream.Is<PortableNetworkGraphic>().IsFalse() &&
-            fileStream.Is<JointPhotographicExpertsGroup>().IsFalse())
+        (var isValidImage, var extension) = fileStream.ValidateAndGetImageExtension();
+        if (isValidImage.IsFalse())
         {
             throw new ErrorOnValidationException(["only png, jpg and jpeg images are accepted."]);
         }
 
         if (string.IsNullOrEmpty(recipe.ImageIdentifier))
         {
-            recipe.ImageIdentifier = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            recipe.ImageIdentifier = $"{Guid.NewGuid()}{extension}";
             _repository.Update(recipe);
             await _unityOfWork.Commit();
         }
-
-        fileStream.Position = 0;
-
         await _blobStorageService.Upload(loggedUser, fileStream, recipe.ImageIdentifier);
-
 
     }
 
