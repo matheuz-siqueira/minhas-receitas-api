@@ -1,4 +1,5 @@
 using System.Reflection;
+using Azure.Storage.Blobs;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using MinhasReceitasApp.Domain.Repositories.User;
 using MinhasReceitasApp.Domain.Security.Cryptography;
 using MinhasReceitasApp.Domain.Security.Tokens;
 using MinhasReceitasApp.Domain.Services.LoggedUser;
+using MinhasReceitasApp.Domain.Services.Storage;
 using MinhasReceitasApp.Infrastructure.DataAccess;
 using MinhasReceitasApp.Infrastructure.DataAccess.Repositories;
 using MinhasReceitasApp.Infrastructure.Extensions;
@@ -17,6 +19,7 @@ using MinhasReceitasApp.Infrastructure.Security.Cryptography;
 using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Generator;
 using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Validator;
 using MinhasReceitasApp.Infrastructure.Services.LoggedUser;
+using MinhasReceitasApp.Infrastructure.Services.Storage;
 
 namespace MinhasReceitasApp.Infrastructure;
 
@@ -28,6 +31,7 @@ public static class DependencyInjectionExtension
         AddTokens(services, configuration);
         AddLoggedUser(services);
         AddPasswordEncripter(services, configuration);
+        AddAzureStorage(services, configuration);
         if (configuration.IsUnitTestEnviroment())
             return;
 
@@ -86,5 +90,13 @@ public static class DependencyInjectionExtension
     {
         var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
         services.AddScoped<IPasswordEncripter>(option => new Sha512Encripter(additionalKey!));
+    }
+
+    private static void AddAzureStorage(IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetValue<string>("Settings:Settings:BlobStorage:Azure");
+
+        services.AddScoped<IBlobStorageService>(
+            c => new AzureStorageService(new BlobServiceClient(connectionString)));
     }
 }
