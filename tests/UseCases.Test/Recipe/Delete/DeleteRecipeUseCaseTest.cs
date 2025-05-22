@@ -1,3 +1,4 @@
+using CommonTestUtilities.BlobStorage;
 using CommonTestUtilities.Entities;
 using CommonTestUtilities.LoggedUser;
 using CommonTestUtilities.Repositories;
@@ -37,7 +38,7 @@ public class DeleteRecipeUseCaseTest
             .Where(e => e.Message.Equals("Recipe not found."));
     }
 
-    
+
     private static DeleteRecipeUseCase CreateUseCase(
         MinhasReceitasApp.Domain.Entities.User user,
         MinhasReceitasApp.Domain.Entities.Recipe? recipe = null)
@@ -46,7 +47,8 @@ public class DeleteRecipeUseCaseTest
         var repositoryRead = new RecipeReadOnlyRepositoryBuilder().GetById(user, recipe).Build();
         var repositoryWrite = RecipeWriteOnlyRepositoryBuilder.Build();
         var unityOfWork = UnityOfWorkBuilder.Build();
+        var blobStorage = new BlobStorageServiceBuilder().GetFileUrl(user, recipe?.ImageIdentifier).Build();
 
-        return new DeleteRecipeUseCase(loggedUser, repositoryRead, repositoryWrite, unityOfWork);
+        return new DeleteRecipeUseCase(loggedUser, repositoryRead, repositoryWrite, unityOfWork, blobStorage);
     }
 }
