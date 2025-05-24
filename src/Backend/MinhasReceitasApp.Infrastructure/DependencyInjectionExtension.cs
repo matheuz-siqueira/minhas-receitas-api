@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MinhasReceitasApp.Domain.Enums;
+using MinhasReceitasApp.Domain.Extensions;
 using MinhasReceitasApp.Domain.Repositories;
 using MinhasReceitasApp.Domain.Repositories.Recipe;
 using MinhasReceitasApp.Domain.Repositories.User;
@@ -96,7 +97,10 @@ public static class DependencyInjectionExtension
     {
         var connectionString = configuration.GetValue<string>("Settings:Settings:BlobStorage:Azure");
 
-        services.AddScoped<IBlobStorageService>(
-            c => new AzureStorageService(new BlobServiceClient(connectionString)));
+        if (connectionString.NotEmpty())
+        {
+            services.AddScoped<IBlobStorageService>(
+                c => new AzureStorageService(new BlobServiceClient(connectionString)));
+        }
     }
 }

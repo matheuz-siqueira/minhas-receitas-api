@@ -7,7 +7,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using MinhasReceitasApp.Application.UseCases.Image;
 using MinhasReceitasApp.Exceptions.ExceptionsBase;
-using MinhasReceitasApp.Infrastructure.Services.LoggedUser;
 using UseCases.Test.Recipe.InlineDatas;
 
 namespace UseCases.Test.Recipe.Image;

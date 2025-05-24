@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Bogus;
 using MinhasReceitasApp.Domain.Entities;
 using MinhasReceitasApp.Domain.Services.Storage;
@@ -15,7 +16,7 @@ public class BlobStorageServiceBuilder
             return this;
 
         var faker = new Faker();
-        var imageUrl = faker.Image.LoremPixelUrl;
+        var imageUrl = faker.Image.LoremPixelUrl();
 
         _mock.Setup(blob => blob.GetFileUrl(user, fileName)).ReturnsAsync(imageUrl);
 
