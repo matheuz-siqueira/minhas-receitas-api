@@ -10,6 +10,8 @@ using MinhasReceitasApp.Application.UseCases.Recipe.GetById;
 using MinhasReceitasApp.Application.UseCases.Recipe.Register;
 using MinhasReceitasApp.Application.UseCases.Recipe.Update;
 using MinhasReceitasApp.Application.UseCases.User.ChangePassword;
+using MinhasReceitasApp.Application.UseCases.User.Delete.Delete;
+using MinhasReceitasApp.Application.UseCases.User.Delete.Request;
 using MinhasReceitasApp.Application.UseCases.User.Profile;
 using MinhasReceitasApp.Application.UseCases.User.Register;
 using MinhasReceitasApp.Application.UseCases.User.Update;
@@ -40,6 +42,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUpdateRecipeUseCase, UpdateRecipeUseCase>();
         services.AddScoped<IGetDashboardUseCase, GetDashboardUseCase>();
         services.AddScoped<IAddUpdateImageCoverUseCase, AddUpdateImageCoverUseCase>();
+        services.AddScoped<IRequestDeleteUserUseCase, RequestDeleteUserUseCase>();
     }
 
     private static void AddAutoMapper(IServiceCollection services)

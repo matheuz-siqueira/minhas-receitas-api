@@ -63,4 +63,10 @@ public class AzureStorageService : IBlobStorageService
         var blobClient = container.GetBlobClient(fileName);
         await blobClient.UploadAsync(file, overwrite: true);
     }
+
+    public async Task DeleteContainer(Guid userIdentifier)
+    {
+        var container = _blobServiceClient.GetBlobContainerClient(userIdentifier.ToString());
+        await container.DeleteIfExistsAsync();
+    }
 }
