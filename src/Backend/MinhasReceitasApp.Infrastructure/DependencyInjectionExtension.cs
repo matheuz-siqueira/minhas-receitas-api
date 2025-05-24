@@ -1,6 +1,8 @@
 using System.Reflection;
+using Azure.Messaging.ServiceBus;
 using Azure.Storage.Blobs;
 using FluentMigrator.Runner;
+using Microsoft.Azure.Amqp.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,7 @@ using MinhasReceitasApp.Domain.Repositories.User;
 using MinhasReceitasApp.Domain.Security.Cryptography;
 using MinhasReceitasApp.Domain.Security.Tokens;
 using MinhasReceitasApp.Domain.Services.LoggedUser;
+using MinhasReceitasApp.Domain.Services.ServiceBus;
 using MinhasReceitasApp.Domain.Services.Storage;
 using MinhasReceitasApp.Infrastructure.DataAccess;
 using MinhasReceitasApp.Infrastructure.DataAccess.Repositories;
@@ -20,6 +23,7 @@ using MinhasReceitasApp.Infrastructure.Security.Cryptography;
 using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Generator;
 using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Validator;
 using MinhasReceitasApp.Infrastructure.Services.LoggedUser;
+using MinhasReceitasApp.Infrastructure.Services.ServiceBus;
 using MinhasReceitasApp.Infrastructure.Services.Storage;
 
 namespace MinhasReceitasApp.Infrastructure;
@@ -33,6 +37,7 @@ public static class DependencyInjectionExtension
         AddLoggedUser(services);
         AddPasswordEncripter(services, configuration);
         AddAzureStorage(services, configuration);
+        AddQueue(services, configuration);
         if (configuration.IsUnitTestEnviroment())
             return;
 
@@ -59,10 +64,11 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUserReadOnlyRepository, UserRepository>();
         services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
         services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
-        services.AddScoped<IUnityOfWork, UnityOfWork>();
+        services.AddScoped<IUserDeleteOnlyRepository, UserRepository>();
         services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
+        services.AddScoped<IUnityOfWork, UnityOfWork>();
     }
 
     private static void AddFluentMigrator_MySql(IServiceCollection services, IConfiguration configuration)
@@ -95,12 +101,33 @@ public static class DependencyInjectionExtension
 
     private static void AddAzureStorage(IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetValue<string>("Settings:Settings:BlobStorage:Azure");
+        var connectionString = configuration.GetValue<string>("Settings:BlobStorage:Azure");
 
         if (connectionString.NotEmpty())
         {
             services.AddScoped<IBlobStorageService>(
                 c => new AzureStorageService(new BlobServiceClient(connectionString)));
         }
+    }
+
+    private static void AddQueue(IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetValue<string>("Settings:ServiceBus:DeleteUserAccount");
+
+        var client = new ServiceBusClient(connectionString, new ServiceBusClientOptions
+        {
+            TransportType = ServiceBusTransportType.AmqpWebSockets
+        });
+
+        var deleteQueue = new DeleteUserQueue(client.CreateSender("user"));
+
+        var DeleteUserProcessor = new DeleteUserProcessor(client.CreateProcessor("user", new ServiceBusProcessorOptions
+        {
+            MaxConcurrentCalls = 1
+        }));
+
+        services.AddSingleton(DeleteUserProcessor);
+
+        services.AddScoped<IDeleteUserQueue>(options => deleteQueue);
     }
 }

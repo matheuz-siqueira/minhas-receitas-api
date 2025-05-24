@@ -1,5 +1,6 @@
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.OpenApi.Models;
+using MinhasReceitasApp.API.BackgroundServices;
 using MinhasReceitasApp.API.Converters;
 using MinhasReceitasApp.API.Filters;
 using MinhasReceitasApp.API.Token;
@@ -60,6 +61,8 @@ builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHostedService<DeleteUserService>();
 
 var app = builder.Build();
 
