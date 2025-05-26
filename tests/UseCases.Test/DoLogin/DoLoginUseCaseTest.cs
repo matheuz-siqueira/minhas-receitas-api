@@ -21,12 +21,12 @@ public class DoLoginUseCaseTest
 
         var result = await usecase.Execute(new RequestLoginJson
         {
-            Email = user.Email, 
+            Email = user.Email,
             Password = password
         });
 
         result.Should().NotBeNull();
-        result.Tokens.Should().NotBeNull(); 
+        result.Tokens.Should().NotBeNull();
         result.Name.Should().NotBeNullOrWhiteSpace().And.Be(user.Name);
         result.Tokens.AccessToken.Should().NotBeNullOrWhiteSpace();
     }
@@ -34,11 +34,11 @@ public class DoLoginUseCaseTest
     [Fact]
     public async Task Error_Invalid_User()
     {
-        var request = RequestLoginJsonBuilder.Build(); 
+        var request = RequestLoginJsonBuilder.Build();
 
-        var usecase = CreateUseCase(); 
+        var usecase = CreateUseCase();
 
-        Func<Task> act = async () => { await usecase.Execute(request); }; 
+        Func<Task> act = async () => { await usecase.Execute(request); };
 
         await act.Should().ThrowAsync<InvalidLoginException>()
             .Where(e => e.Message.Equals("Email and/or password invalid."));
@@ -47,11 +47,10 @@ public class DoLoginUseCaseTest
     private static DoLoginUseCase CreateUseCase(MinhasReceitasApp.Domain.Entities.User? user = null)
     {
         var passwordEncripter = PasswordEncripterBuilder.Build();
-        var userReadOnlyRepositoryBuilder = new UserReadOnlyRepositoryBuilder(); 
+        var userReadOnlyRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
         var accessTokenGenerator = JwtTokenGeneratorBuilder.Build();
-        if(user is not null)
-    
-            userReadOnlyRepositoryBuilder.GetByEmailAndPassword(user); 
+        if (user is not null)
+            userReadOnlyRepositoryBuilder.GetByEmail(user);
 
         return new DoLoginUseCase(userReadOnlyRepositoryBuilder.Build(), passwordEncripter, accessTokenGenerator);
     }
