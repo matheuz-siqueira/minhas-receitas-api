@@ -43,9 +43,8 @@ public class ChangePasswordUseCase : IChangePasswordUseCase
     private void Validate(RequestChangePasswordJson request, Domain.Entities.User user)
     {
         var result = new ChangePasswordValidator().Validate(request);
-        var currentPasswordEncripted = _passwordEncripter.Encrypt(request.Password);
 
-        if (currentPasswordEncripted.Equals(user.Password).IsFalse())
+        if (_passwordEncripter.IsValid(request.Password, user.Password).IsFalse())
             result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "A senha atual está incorreta."));
 
         if (result.IsValid.IsFalse())

@@ -35,7 +35,7 @@ public static class DependencyInjectionExtension
         AddRepositories(services);
         AddTokens(services, configuration);
         AddLoggedUser(services);
-        AddPasswordEncripter(services, configuration);
+        AddPasswordEncripter(services);
         AddAzureStorage(services, configuration);
         AddQueue(services, configuration);
         if (configuration.IsUnitTestEnviroment())
@@ -93,10 +93,9 @@ public static class DependencyInjectionExtension
     }
 
     private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
-    private static void AddPasswordEncripter(IServiceCollection services, IConfiguration configuration)
+    private static void AddPasswordEncripter(IServiceCollection services)
     {
-        var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
-        services.AddScoped<IPasswordEncripter>(option => new Sha512Encripter(additionalKey!));
+        services.AddScoped<IPasswordEncripter, BCryptNet>();
     }
 
     private static void AddAzureStorage(IServiceCollection services, IConfiguration configuration)
