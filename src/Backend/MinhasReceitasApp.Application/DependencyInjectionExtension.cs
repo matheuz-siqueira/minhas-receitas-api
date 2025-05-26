@@ -4,6 +4,7 @@ using MinhasReceitasApp.Application.Services.AutoMapper;
 using MinhasReceitasApp.Application.UseCases.Dashboard;
 using MinhasReceitasApp.Application.UseCases.Image;
 using MinhasReceitasApp.Application.UseCases.Login.DoLogin;
+using MinhasReceitasApp.Application.UseCases.Login.External;
 using MinhasReceitasApp.Application.UseCases.Recipe.Delete;
 using MinhasReceitasApp.Application.UseCases.Recipe.Filter;
 using MinhasReceitasApp.Application.UseCases.Recipe.GetById;
@@ -43,6 +44,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetDashboardUseCase, GetDashboardUseCase>();
         services.AddScoped<IAddUpdateImageCoverUseCase, AddUpdateImageCoverUseCase>();
         services.AddScoped<IRequestDeleteUserUseCase, RequestDeleteUserUseCase>();
+        services.AddScoped<IExternalLoginUseCase, ExternalLoginUseCase>();
     }
 
     private static void AddAutoMapper(IServiceCollection services)
