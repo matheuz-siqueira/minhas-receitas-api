@@ -10,6 +10,7 @@ using MinhasReceitasApp.Domain.Enums;
 using MinhasReceitasApp.Domain.Extensions;
 using MinhasReceitasApp.Domain.Repositories;
 using MinhasReceitasApp.Domain.Repositories.Recipe;
+using MinhasReceitasApp.Domain.Repositories.Token;
 using MinhasReceitasApp.Domain.Repositories.User;
 using MinhasReceitasApp.Domain.Security.Cryptography;
 using MinhasReceitasApp.Domain.Security.Tokens;
@@ -22,6 +23,7 @@ using MinhasReceitasApp.Infrastructure.Extensions;
 using MinhasReceitasApp.Infrastructure.Security.Cryptography;
 using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Generator;
 using MinhasReceitasApp.Infrastructure.Security.Tokens.Access.Validator;
+using MinhasReceitasApp.Infrastructure.Security.Tokens.Refresh;
 using MinhasReceitasApp.Infrastructure.Services.LoggedUser;
 using MinhasReceitasApp.Infrastructure.Services.ServiceBus;
 using MinhasReceitasApp.Infrastructure.Services.Storage;
@@ -69,6 +71,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
         services.AddScoped<IUnityOfWork, UnityOfWork>();
+        services.AddScoped<ITokenRepository, TokenRepository>();
     }
 
     private static void AddFluentMigrator_MySql(IServiceCollection services, IConfiguration configuration)
@@ -90,6 +93,7 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
         services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!));
+        services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
     }
 
     private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
