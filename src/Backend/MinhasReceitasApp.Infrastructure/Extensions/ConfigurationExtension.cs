@@ -7,7 +7,7 @@ public static class ConfigurationExtension
 {
     public static string ConnectionString(this IConfiguration configuration)
     {
-        return configuration.GetConnectionString("connection")!;
+        return configuration.GetConnectionString("ConnectionMySql")!;
     }
 
     public static DatabaseType DatabaseType(this IConfiguration configuration)
