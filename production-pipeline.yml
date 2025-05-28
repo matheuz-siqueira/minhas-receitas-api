@@ -3,7 +3,7 @@ trigger:
 - master
 
 variables:
-  dockerRegistryServiceConnection: '3076b8d8-f825-4c62-9de7-24a2e046ecd2'
+  dockerRegistryServiceConnection: 'dd63e0f4-97c1-4ff7-b2b8-cc290fc21b74'
   imageRepository: 'minhasreceitasapp'
   containerRegistry: 'apiminhasreceitas.azurecr.io'
   dockerfilePath: 'Dockerfile'
