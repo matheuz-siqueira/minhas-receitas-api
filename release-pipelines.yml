@@ -28,7 +28,7 @@ steps:
     command: buildAndPush
     repository: $(imageRepository)
     dockerfile: $(dockerfilePath)
-    containerRegistry: $(dockerRegistryServiceConnection)
+    containerRegistry: 'apiMinhasReceitas'
     tags: |
       latest
       $(tag)
