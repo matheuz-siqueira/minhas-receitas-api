@@ -38,8 +38,8 @@ public class FilterRecipeUseCaseTest
         Func<Task> act = async () => { await useCase.Execute(request); };
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("Unsupported cooking time."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("Unsupported cooking time."));
     }
 
     private static FilterRecipeUseCase CreateUseCase(

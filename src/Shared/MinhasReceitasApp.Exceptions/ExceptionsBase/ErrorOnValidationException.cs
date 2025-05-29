@@ -1,10 +1,16 @@
+using System.Net;
+
 namespace MinhasReceitasApp.Exceptions.ExceptionsBase;
 
 public class ErrorOnValidationException : MinhasReceitasAppException
 {
-    public IList<string> ErrorMessages { get; set; }
+    private readonly IList<string> _errorMessages;
     public ErrorOnValidationException(IList<string> errorMessages) : base(string.Empty)
     {
-        ErrorMessages = errorMessages; 
+        _errorMessages = errorMessages;
     }
+
+    public override IList<string> GetErrorMessages() => _errorMessages;
+
+    public override HttpStatusCode GetStatusCode() => HttpStatusCode.BadRequest;
 }

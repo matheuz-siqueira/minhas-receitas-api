@@ -54,8 +54,8 @@ public class UpdateRecipeUseCaseTest
         Func<Task> act = async () => await useCase.Execute(recipe.Id, request);
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("title cannot be empty."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("title cannot be empty."));
     }
 
     private static UpdateRecipeUseCase CreateUseCase(
