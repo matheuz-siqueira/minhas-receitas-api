@@ -39,8 +39,8 @@ public class UpdateUserUseCaseTest
         Func<Task> act = async () => await useCase.Execute(request);
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("O nome não pode ser vazio."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("O nome não pode ser vazio."));
 
         user.Name.Should().NotBe(request.Name);
         user.Email.Should().NotBe(request.Email);
@@ -59,8 +59,8 @@ public class UpdateUserUseCaseTest
         Func<Task> act = async () => await useCase.Execute(request);
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("O Email não pode ser vazio."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("O Email não pode ser vazio."));
 
         user.Name.Should().NotBe(request.Name);
         user.Email.Should().NotBe(request.Email);
@@ -77,8 +77,8 @@ public class UpdateUserUseCaseTest
         Func<Task> act = async () => { await useCase.Execute(request); };
 
         await act.Should().ThrowAsync<ErrorOnValidationException>()
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("Esse email já está cadastrado."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("Esse email já está cadastrado."));
 
         user.Name.Should().NotBe(request.Name);
         user.Email.Should().NotBe(request.Email);

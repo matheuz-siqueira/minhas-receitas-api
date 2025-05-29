@@ -34,7 +34,7 @@ public class RegisterUserUseCaseTest
         Func<Task> act = async () => await useCase.Execute(request);
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains("E-mail já registrado."));
+            .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains("E-mail já registrado."));
 
     }
 
@@ -48,7 +48,7 @@ public class RegisterUserUseCaseTest
         Func<Task> act = async () => await useCase.Execute(request);
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains("O nome não pode ser vazio."));
+            .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains("O nome não pode ser vazio."));
 
     }
 

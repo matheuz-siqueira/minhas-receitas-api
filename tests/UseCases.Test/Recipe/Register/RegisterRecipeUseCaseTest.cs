@@ -56,8 +56,8 @@ public class RegisterRecipeUseCaseTest
         Func<Task> act = async () => { await useCase.Execute(request); };
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("title cannot be empty."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("title cannot be empty."));
     }
 
     [Fact]
@@ -74,8 +74,8 @@ public class RegisterRecipeUseCaseTest
         var act = async () => { await useCase.Execute(request); };
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("only png, jpg and jpeg images are accepted."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("only png, jpg and jpeg images are accepted."));
     }
 
     private static RegisterRecipeUseCase CreateUseCase(

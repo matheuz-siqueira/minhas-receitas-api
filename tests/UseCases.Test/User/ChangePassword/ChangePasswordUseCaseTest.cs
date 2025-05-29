@@ -42,8 +42,8 @@ public class ChangePasswordUseCaseTest
         Func<Task> act = async () => { await useCase.Execute(request); };
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("A senha não pode ser vazia."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("A senha não pode ser vazia."));
     }
 
     [Fact]
@@ -55,8 +55,8 @@ public class ChangePasswordUseCaseTest
         Func<Task> act = async () => { await useCase.Execute(request); };
 
         await act.Should().ThrowAsync<ErrorOnValidationException>()
-            .Where(e => e.ErrorMessages.Count == 1 &&
-                e.ErrorMessages.Contains("A senha atual está incorreta."));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains("A senha atual está incorreta."));
     }
     private static ChangePasswordUseCase CreateUseCase(MinhasReceitasApp.Domain.Entities.User user)
     {
