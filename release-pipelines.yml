@@ -1,11 +1,8 @@
 trigger:
 - develop
 
-
 variables:
-  dockerRegistryServiceConnection: '572e9db1-a4bb-4fd7-9d4f-e9736c904112'
   imageRepository: 'minhasreceitasapp'
-  containerRegistry: 'apiminhasreceitas.azurecr.io'
   dockerfilePath: 'Dockerfile'
   tag: '$(Build.BuildId)'
 
@@ -19,18 +16,18 @@ steps:
   name: appsettings
   inputs:
     secureFile: 'appsettings.Production.json'
-  
+
 - script: |
     cp $(appsettings.secureFilePath) src/Backend/MinhasReceitasApp.API
+  displayName: Copia arquivo de configuração seguro
+
 - task: Docker@2
-  displayName: Build and push an image to container registry
+  displayName: Build e push da imagem Docker
   inputs:
     command: buildAndPush
     repository: $(imageRepository)
     dockerfile: $(dockerfilePath)
-    containerRegistry: 'apiMinhasReceitas'
+    containerRegistry: $(DOCKER_REGISTRY_SERVICE_CONNECTION) 
     tags: |
       latest
       $(tag)
-    
-    
