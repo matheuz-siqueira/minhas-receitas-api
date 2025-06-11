@@ -4,17 +4,21 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\MinhasReceitasApp.Communication\MinhasReceitasApp.Communication.csproj" />
-    <ProjectReference Include="..\..\Shared\MinhasReceitasApp.Exception\MinhasReceitasApp.Exception.csproj" />
     <ProjectReference Include="..\MinhasReceitasApp.Application\MinhasReceitasApp.Application.csproj" />
+    <ProjectReference Include="..\..\Shared\MinhasReceitasApp.Exceptions\MinhasReceitasApp.Exceptions.csproj" />
+    <ProjectReference Include="..\MinhasReceitasApp.Infrastructure\MinhasReceitasApp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
